@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Opfer-Handy – Escape Room</title>
+<style>
+:root{--ink:#f6f7fb;--muted:#aeb4c2;--glass:rgba(18,20,27,.78);--line:rgba(255,255,255,.17)}
+*{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 15%,#333b50,#101116 55%,#08090c);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:flex;align-items:center;justify-content:center;padding:24px}
+.wrap{display:flex;gap:28px;align-items:center;flex-wrap:wrap;justify-content:center}.phone{width:min(390px,92vw);height:min(820px,88vh);min-height:600px;border:8px solid #292b31;border-radius:48px;background:#050609;box-shadow:0 28px 80px #000a,inset 0 0 0 2px #555;position:relative;padding:12px;overflow:hidden}
+.island{position:absolute;z-index:5;top:10px;left:50%;transform:translateX(-50%);width:108px;height:27px;border-radius:18px;background:#000}
+.status{height:30px;display:flex;justify-content:space-between;padding:0 12px;font-size:12px;font-weight:700;position:relative;z-index:6}
+.screen{height:calc(100% - 30px);border-radius:31px;overflow:hidden;position:relative;background:#161a28}
+.wallpaper{position:absolute;inset:0;background:linear-gradient(150deg,#597da5 0%,#a9b7c9 30%,#5c587d 62%,#171b35 100%);overflow:hidden}
+.wallpaper:before,.wallpaper:after{content:"";position:absolute;border-radius:50%;filter:blur(2px);opacity:.55}.wallpaper:before{width:330px;height:330px;background:#e5d8cf;top:100px;left:-110px}.wallpaper:after{width:280px;height:380px;background:#293e66;bottom:-70px;right:-90px}
+.home{position:absolute;inset:0;padding:55px 18px 25px;display:flex;flex-direction:column}
+.date{font-size:15px;text-align:center;text-shadow:0 1px 8px #0008}.clock{font-size:56px;font-weight:300;text-align:center;letter-spacing:-2px;margin-top:4px;text-shadow:0 1px 8px #0008}
+.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 10px;margin-top:40px}
+.app{background:none;border:0;color:white;display:flex;align-items:center;flex-direction:column;gap:6px;font-size:10px;cursor:pointer;text-shadow:0 1px 4px #0008;padding:0}
+.appicon{width:53px;height:53px;border-radius:14px;display:grid;place-items:center;font-size:27px;text-shadow:none;box-shadow:0 3px 9px #0003}
+.photos{background:conic-gradient(#f34c58,#f6b743,#58bb71,#4da5fa,#b078e6,#f34c58)}.messages{background:#30c75b}.notes{background:linear-gradient(#fff 0 25%,#f8d64b 25% 32%,#fff 32%)}.contacts{background:linear-gradient(135deg,#e5e8ef,#7f8b9d)}.phoneapp{background:#32c75b}.calendar{background:#f5f5f7;color:#ed3b36;font-size:12px;font-weight:800}.camera{background:linear-gradient(135deg,#555,#111)}.browsericon{background:linear-gradient(135deg,#2c9cf4,#e8f6ff);color:#1262a8}.settings{background:linear-gradient(135deg,#9da4ae,#56606c)}
+.dock{margin-top:auto;background:#ffffff38;backdrop-filter:blur(18px);border:1px solid #ffffff20;border-radius:23px;padding:10px;display:flex;justify-content:space-around}
+.dock .appicon{width:48px;height:48px}
+.homebar{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:115px;height:5px;background:#fff;border-radius:8px;z-index:8}
+.view{position:absolute;inset:0;background:#f4f4f8;color:#11151b;display:none;flex-direction:column;padding:46px 0 20px;z-index:3}.view.active{display:flex}
+.viewhead{display:flex;align-items:center;gap:10px;padding:0 16px 13px;border-bottom:1px solid #d9dbe2;font-size:18px;font-weight:700}.back{border:0;background:none;color:#1684ff;font-size:15px;cursor:pointer;padding:4px 0}.viewbody{padding:16px;overflow:auto;flex:1}.muted{color:#6c707b;font-size:13px}.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}.photo-thumb{border:0;padding:0;aspect-ratio:1;background:#d5dbe5;overflow:hidden;cursor:pointer}.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block}.placeholder{height:100%;display:grid;place-items:center;font-size:25px;background:linear-gradient(135deg,#bcc9d9,#6b7f9e)}
+.chatrow{width:100%;display:flex;gap:10px;align-items:center;text-align:left;padding:12px 0;border:0;border-bottom:1px solid #dddfe5;background:none;cursor:pointer;color:#16181e}.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#b9c7da;font-size:18px;flex-shrink:0}.chatrow strong{display:block;font-size:15px}.chatrow small{display:block;color:#777;margin-top:4px;font-size:12px}.bubble{max-width:86%;padding:10px 13px;border-radius:18px;margin:10px 0;font-size:14px;line-height:1.35}.incoming{background:#e2e3e8;border-bottom-left-radius:5px}.outgoing{background:#1684ff;color:white;margin-left:auto;border-bottom-right-radius:5px}
+.note{background:#fff7bd;border-radius:10px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px #0001;white-space:pre-wrap;cursor:pointer}
+.contact{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #ddd}.contact .avatar{width:50px;height:50px}
+.fullphoto{width:100%;max-height:62vh;object-fit:contain;background:#111;border-radius:8px}.photo-caption{font-size:14px;margin-top:10px}
+.info{max-width:360px;color:#e8eaf0;line-height:1.5}.info h1{font-size:24px}.info code{background:#252936;padding:2px 5px;border-radius:4px}.info li{margin-bottom:8px}.tip{color:#bfc7d7;font-size:13px}
+@media(max-height:700px){.phone{height:94vh;min-height:0}.apps{gap:14px 8px;margin-top:22px}.appicon{width:46px;height:46px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="phone" aria-label="Interaktives Opfer-Handy">
+<div class="island"></div>
+<div class="status"><span>9:41</span><span>●●● ▰</span></div>
+<div class="screen">
+<div class="wallpaper"></div>
+<div class="home">
+<div class="date" id="homeDate">Sonntag, 18. Oktober</div><div class="clock">9:41</div>
+<div class="apps">
+<button class="app" onclick="openPhotos()"><span class="appicon photos">🌈</span>Fotos</button>
+<button class="app" onclick="openView('faceLock')"><span class="appicon messages">●</span>Nachrichten</button>
+<button class="app" onclick="openView('notes')"><span class="appicon notes">📝</span>Notizen</button>
+<button class="app" onclick="openView('contacts')"><span class="appicon contacts">👤</span>Kontakte</button>
+<button class="app" onclick="openView('phone')"><span class="appicon phoneapp">☎</span>Telefon</button>
+<button class="app" onclick="openView('calendar')"><span class="appicon calendar">18<br>OKT.</span>Kalender</button>
+<button class="app" onclick="openView('camera')"><span class="appicon camera">📷</span>Kamera</button>
+<button class="app" onclick="openView('settings')"><span class="appicon settings">⚙️</span>Einstellungen</button>
+<button class="app" onclick="openView('browser')"><span class="appicon browsericon">🌐</span>Safari</button>
+</div>
+<div class="dock">
+<button class="app" onclick="openView('phone')"><span class="appicon phoneapp">☎</span></button>
+<button class="app" onclick="openView('faceLock')"><span class="appicon messages">●</span></button>
+<button class="app" onclick="openPhotos()"><span class="appicon photos">🌈</span></button>
+<button class="app" onclick="openView('camera')"><span class="appicon camera">📷</span></button>
+</div>
+</div>
+<div class="view" id="photoLock"><div class="viewhead"><button class="back" onclick="goHome()">‹ Zurück</button><span>Geschützte Fotos</span></div><div class="viewbody" style="text-align:center;padding:32px 20px"><div style="font-size:54px">🔐</div><h2>Code eingeben</h2><p class="muted">Amys Fotomediathek ist geschützt.</p><div id="pinDots" style="font-size:30px;letter-spacing:12px;margin:22px 0">○○○○</div><div id="pinError" style="min-height:25px;color:#d12f3f;font-size:13px"></div><div id="pinPad" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:260px;margin:auto"></div></div></div>
+<div class="view" id="browser"><div class="viewhead"><button class="back" onclick="goHome()">‹ Zurück</button><span>Safari</span></div><div class="viewbody"><div style="background:white;border-radius:13px;padding:12px;margin-bottom:15px;color:#687386">🔎 Suchverlauf</div><h3>Zuletzt gesucht</h3><div id="searchHistory"></div></div></div>
+<div class="view" id="photos"><div class="viewhead"><button class="back" onclick="goHome()">‹ Zurück</button><span>Fotos</span></div><div class="viewbody"><div class="photo-grid" id="photoGrid"></div></div></div>
+<div class="view" id="photoDetail"><div class="viewhead"><button class="back" onclick="openView('photos')">‹ Fotos</button><span id="photoTitle">Foto</span></div><div class="viewbody"><img id="detailImg" class="fullphoto" alt="Ausgewähltes Foto"><div id="detailCaption" class="photo-caption"></div></div></div>
+<div class="view" id="faceLock"><div class="viewhead"><button class="back" onclick="goHome()">‹ Zurück</button><span>Nachrichten</span></div><div class="viewbody" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px"><div style="width:108px;height:108px;border:3px solid #1684ff;border-radius:30px;display:grid;place-items:center;font-size:58px;margin-bottom:22px">🔒</div><h2 style="margin:0 0 8px">Face ID erforderlich</h2><p style="color:#6c707b;line-height:1.45">Zum Öffnen der Nachrichten muss Face ID verwendet werden.</p><div id="faceStatus" style="margin:16px 0;color:#6c707b;font-size:13px">Geschützte App · Zugriff gesperrt</div><button onclick="tryFaceID()" style="background:#1684ff;color:white;border:0;border-radius:12px;padding:12px 20px;font-size:15px;font-weight:600;cursor:pointer">Mit Face ID entsperren</button><p style="font-size:12px;color:#888;margin-top:16px">Authentifizierung fehlgeschlagen. Erneut versuchen.</p></div></div>
+<div class="view" id="messages"><div class="viewhead"><button class="back" onclick="goHome()">‹ Zurück</button><span>Nachrichten</span></div><div class="viewbody" id="chatList"></div></div>
+<div class="view" id="chatDetail"><div class="viewhead"><button class="back" onclick="openView('faceLock')">‹ Nachrichten</button><span id="chatTitle">Chat</span></div><div class="viewbody" id="chatBody"></div></div>
+<div class="view" id="notes"><div class="viewhead"><button class="back" onclick="goHome()">‹ Zurück</button><span>Notizen</span></div><div class="viewbody" id="notesBody"></div></div>
+<div class="view" id="contacts"><div class="viewhead"><button class="back" onclick="goHome()">‹ Zurück</button><span>Kontakte</span></div><div class="viewbody" id="contactsBody"></div></div>
+<div class="view" id="phone"><div class="viewhead"><button class="back" onclick="goHome()">‹ Zurück</button><span>Telefon</span></div><div class="viewbody"><h3>Letzte Anrufe</h3><p>📞 Livi (ausgehend) <span class="muted"> · 20.12.2025, 08:30</span></p><p>📞 Livi (eingehend) <span class="muted"> · 20.12.2025, 19:24</span></p><p>📞 Livi (ausgehend) <span class="muted"> · 22.12.2025, 12:44</span></p><p>📞 Livi (ausgehend) <span class="muted"> · 23.12.2025, 20:14</span></p><p>📞 Mama (eingehend) <span class="muted"> · 24.12.2025, 10:08</span></p><p>📞 Mama (eingehend) <span class="muted"> · 24.12.2025, 10:09</span></p><p>📞 Mama (eingehend) <span class="muted"> · 24.12.2025, 10:10</span></p><p>📞 Mama (eingehend) <span class="muted"> · 24.12.2025, 10:15</span></p><p>📞 Mama (eingehend) <span class="muted"> · 24.12.2025, 12:59</span></p><p>📞 Mama (eingehend) <span class="muted"> · 24.12.2025, 15:11</span></p><p>📞 Stella (eingehend) <span class="muted"> · 24.12.2025, 17:00</span></p><p>📞 Hermann (eingehend) <span class="muted"> · 25.12.2025, 10:09</span></p><p>📞 Moritz (ausgehend) <span class="muted"> · 25.12.2025, 19:52</span></p></div></div>
+<div class="view" id="calendar"><div class="viewhead"><button class="back" onclick="goHome()">‹ Zurück</button><span>Kalender</span></div><div class="viewbody"><h3>Dezember</h3><p> Notizen</p><div class="note">Vortrag mit Hanna am 01.01.2026.</div><div class="note">Notiz: Nein Sarah du musst keine von den Nummern anrufen</div></div></div>
+<div class="view" id="camera"><div class="viewhead"><button class="back" onclick="goHome()">‹ Zurück</button><span>Kamera</span></div><div class="viewbody"><p>Zuletzt aufgenommen</p><div class="note">📷 IMG_1048 · 25.12.2025, 23:16</div><p class="muted"></p></div></div>
+<div class="view" id="settings"><div class="viewhead"><button class="back" onclick="goHome()">‹ Zurück</button><span>Einstellungen</span></div><div class="viewbody"><p>🔋 Batterie <span class="muted">68 %</span></p><p>📶 WLAN · Verbunden</p><p>🔒 Face ID · Aktiviert</p><p>📱 Name: Amys iPhone</p></div></div>
+<div class="homebar"></div>
+</div>
+</div>
+</div>
+<script>
+// ===== HIER DEINE INHALTE ÄNDERN =====
+// Die Nachrichten-App ist absichtlich durch einen Face-ID-Bildschirm gesperrt.
+// Die Demo lässt den Zugriff immer fehlschlagen; alle anderen Apps bleiben zugänglich.
+// Bilddateien in denselben Ordner wie diese HTML-Datei legen.
+// Beispiel: {src:"amy.jpg", caption:"Amy mit Stella, zwei Tage vor dem Verschwinden."}
+const PHOTO_PIN = "7000"; // Hier den vierstelligen Galerie-Code ändern
+const SEARCH_HISTORY = [
+ {query:"Weihnachtskekse für 2 Personen Rezept", time:"23.12.2025 · 20:38"},
+ {query:"Wie voll sind Züge in der Weihnachtszeit?", time:"22.12.2025 · 21:16"},
+ {query:"Wie kann man gelöschte Nachrichten wiederherstellen?", time:"28.12.2024 · 19:05"},
+ {query:"Insulin kaufen in welcher Apotheke", time:"12.04.2023 · 18:42"},
+ {query:"Beste Macarons in Paris", time:"02.03.2023 · 11:10"}
+];
+const PHOTOS = [
+ {src:"amy.jpg", caption:"IMG_1048 – Me,Myself and I"},
+ {src:"couple.jpg", caption:"IMG_1042 – Ich und mein Baby!!"},
+ {src:"eltern.png", caption:"IMG_1031 – Meine wunderbaren Eltern. Su und Hermän :)"},
+ {src:"freunde.jpg", caption:"IMG_1027 – Stella und Ich letztes Jahr."},
+ {src:"funny.jpg", caption:"IMG_1017 – hehe"},
+ {src:"insulin.jpg", caption:"IMG_1017 – piks piks"},
+ {src:"livi.jpg", caption:"IMG_1017 – mein Schwesterherz"},
+ {src:"moritz.png", caption:"IMG_1017 – der Geile"},
+ {src:"party.png", caption:"IMG_1017 – Diese Party zum Beginn des Schuljares war mega"},
+ {src:"stamy.png", caption:"IMG_1017 – Wowii"}
+];
+const CHATS = [
+ {name:"Stella Hartweg", avatar:"S", preview:"Du darfst niemandem davon erzählen.", messages:[
+  ["in","Bist du gestern wirklich nach Hause gegangen?"],
+  ["out","Ja. Warum fragst du?"],
+  ["in","Du darfst niemandem davon erzählen. Versprich es mir."],
+  ["out","Stella, was ist passiert?"],
+  ["in","23:30. Am alten Ort. Komm allein."]
+ ]},
+ {name:"Mama", avatar:"M", preview:"Melde dich, wenn du angekommen bist.", messages:[
+  ["in","Wo bist du? Es ist schon spät."],
+  ["out","Bin bei einer Freundin. Alles gut."],
+  ["in","Welche Freundin?"],
+  ["out","Ich erklär's dir morgen."]
+ ]},
+ {name:"Unbekannte Nummer", avatar:"?", preview:"Hast du es dabei?", messages:[
+  ["in","Hast du es dabei?"],
+  ["out","Ja. Aber ich will das nicht mehr."],
+  ["in","Dann hättest du nicht kommen dürfen."]
+ ]}
+];
+const NOTES = [
+ {title:"Einkaufsliste", text:"Milch\nBrot\nBatterien"},
+ {title:"!!!", text:"Hauptbahnhof zu Livi (48°13'54.3\"N 16°23'08.6\"E) circa 30 min"},
+ {title:"Empfehlungen von Mama", text:"Julia Schierle Plankenhofstr. 5a München, Dr. Manfred Lovermann Montsalvatstr. 19 München"},
+ {title:"To Do", text:"ins Handbuch gucken"}
+];
+const CONTACTS = [
+ {name:"Stella", detail:"Beste Freundin · 0170 1234567", avatar:"S"},
+ {name:"Mama", detail:"Mutter · 0151 23456789", avatar:"M"},
+ {name:"Hermann", detail:"Stiefvater · 0151 26256789", avatar:"H"},
+ {name:"Schatz", detail:"Moritz · 0151 666241452", avatar:"M"},
+ {name:"Livi", detail:"Schwester · 0151 66622662", avatar:"L"},
+ {name:"Janine", detail:"Blockiert", avatar:"J"},
+ {name:"Papa", detail:"Vater · 0151 75111322", avatar:"P"},
+ {name:"Simon", detail:"Klassenkamerad · 0151 6644300962", avatar:"S"},
+ {name:"Hanna", detail:"Klassenkameradin · 0151 7552121262", avatar:"H"}
+];
+// ===== NICHTS UNTERHALB DIESER ZEILE ÄNDERN, WENN DU NICHT MÖCHTEST =====
+const allViews=[...document.querySelectorAll('.view')];
+function openView(id){allViews.forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function goHome(){allViews.forEach(v=>v.classList.remove('active'))}
+let photosUnlocked=false, enteredPin="";
+function openPhotos(){if(photosUnlocked){openView('photos')}else{enteredPin="";updatePin();openView('photoLock')}}
+function updatePin(){document.getElementById('pinDots').textContent="●".repeat(enteredPin.length)+"○".repeat(4-enteredPin.length)}
+function pinPress(k){
+ if(k==="⌫"){enteredPin=enteredPin.slice(0,-1);updatePin();return}
+ if(enteredPin.length>=4)return;
+ enteredPin+=k;updatePin();
+ if(enteredPin.length===4){
+  if(enteredPin===PHOTO_PIN){photosUnlocked=true;document.getElementById('pinError').textContent="";openView('photos')}
+  else{document.getElementById('pinError').textContent="Falscher Code. Bitte erneut versuchen.";enteredPin="";updatePin()}
+ }
+}
+const pinPad=document.getElementById('pinPad');
+["1","2","3","4","5","6","7","8","9","","0","⌫"].forEach(k=>{
+ const b=document.createElement('button');b.textContent=k;b.disabled=!k;
+ b.style.cssText="border:0;border-radius:40px;height:58px;font-size:25px;background:#e0e4ec;color:#151a25;cursor:pointer";
+ b.onclick=()=>pinPress(k);pinPad.appendChild(b)
+});
+const searchHistory=document.getElementById('searchHistory');
+SEARCH_HISTORY.forEach(s=>{
+ const d=document.createElement('div');d.style.cssText="background:white;border-bottom:1px solid #e2e3e8;padding:13px;border-radius:7px;margin-bottom:5px";
+ const q=document.createElement('div');q.textContent="🔎  "+s.query;q.style.fontSize="14px";
+ const t=document.createElement('small');t.className="muted";t.textContent=s.time;
+ d.append(q,t);searchHistory.appendChild(d);
+});
+function tryFaceID(){
+ const status=document.getElementById('faceStatus');
+ status.textContent='Face ID nicht erkannt · Zugriff verweigert';
+ status.style.color='#d12f3f';
+ const button=document.querySelector('#faceLock button[onclick="tryFaceID()"]');
+ button.textContent='Erneut versuchen';
+}
+const photoGrid=document.getElementById('photoGrid');
+PHOTOS.forEach((p,i)=>{const b=document.createElement('button');b.className='photo-thumb';b.title=p.caption;if(p.src){const img=document.createElement('img');img.src=p.src;img.alt=p.caption;b.appendChild(img)}else{const d=document.createElement('div');d.className='placeholder';d.textContent=['🌆','👥','🌙','📍'][i%4];b.appendChild(d)}b.onclick=()=>{document.getElementById('photoTitle').textContent='IMG_'+(1048-i*7);document.getElementById('detailCaption').textContent=p.caption;const img=document.getElementById('detailImg');if(p.src){img.src=p.src;img.style.display='block'}else{img.removeAttribute('src');img.style.display='none'}openView('photoDetail')};photoGrid.appendChild(b)});
+const chatList=document.getElementById('chatList');
+CHATS.forEach((c,i)=>{const b=document.createElement('button');b.className='chatrow';b.innerHTML=`<span class="avatar">${c.avatar}</span><span><strong>${c.name}</strong><small>${c.preview}</small></span>`;b.onclick=()=>{document.getElementById('chatTitle').textContent=c.name;const body=document.getElementById('chatBody');body.innerHTML='';c.messages.forEach(m=>{const d=document.createElement('div');d.className='bubble '+(m[0]==='out'?'outgoing':'incoming');d.textContent=m[1];body.appendChild(d)});openView('chatDetail')};chatList.appendChild(b)});
+const notesBody=document.getElementById('notesBody');NOTES.forEach(n=>{const d=document.createElement('div');d.className='note';const strong=document.createElement('strong');strong.textContent=n.title;const p=document.createElement('p');p.textContent=n.text;d.append(strong,p);notesBody.appendChild(d)});
+const contactsBody=document.getElementById('contactsBody');CONTACTS.forEach(c=>{const d=document.createElement('div');d.className='contact';d.innerHTML=`<span class="avatar">${c.avatar}</span><span><strong>${c.name}</strong><br><small class="muted">${c.detail}</small></span>`;contactsBody.appendChild(d)});
+document.getElementById('homeDate').textContent=new Intl.DateTimeFormat('de-DE',{weekday:'long',day:'numeric',month:'long'}).format(new Date());
+</script>
+</body>
+</html>
